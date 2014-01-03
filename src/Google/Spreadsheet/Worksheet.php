@@ -98,12 +98,35 @@ class Worksheet
     /**
      * Get the list feed of this worksheet
      * 
+     * @param string $query
+     * @param string $orderby
+     * @param bool $reverse
+     * 
      * @return \Google\Spreadsheet\ListFeed
      */
-    public function getListFeed()
+    public function getListFeed($query = null, $orderby = null, $reverse = false)
     {
         $serviceRequest = ServiceRequestFactory::getInstance();
-        $serviceRequest->getRequest()->setFullUrl($this->getListFeedUrl());
+
+        $url = \Zend\Uri\UriFactory::factory($this->getListFeedUrl());
+
+        $params = $url->getQueryAsArray();
+
+        if (!empty($query)) {
+            $params['sq'] = $query;
+        }
+
+        if ($reverse) {
+            $params['reverse'] = 'true';
+        }
+
+        if (!empty($orderby)) {
+            $params['orderby'] = $orderby;
+        }
+
+        $url->setQuery($params);
+
+        $serviceRequest->getRequest()->setFullUrl($url->toString());
         $res = $serviceRequest->execute();
         return new ListFeed($res);
     }

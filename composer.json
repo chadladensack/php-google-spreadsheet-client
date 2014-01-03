@@ -17,6 +17,10 @@
             "role": "Packager"
         }
     ],
+    "require" : {
+        "php" : ">=5.3.3",
+        "zendframework/zend-uri" : "2.*"
+    },
     "autoload": {
         "classmap": ["src/"]
     }
